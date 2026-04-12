@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PyTorch checkpoints
+*.pth
+*.pth.tar
+*.ckpt
+
+# Logs
+*.log
+log/
+logs/
+runs/
+
+# Data (large files)
+data/*/raw/
+data/*/processed/
+
+# IDE
+.vscode/
+.idea/
+
+# Build artifacts
+*.c
+*.o
+*.cpython-*.so
