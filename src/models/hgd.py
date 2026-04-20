@@ -6,6 +6,7 @@ along the graph structure, yielding a structure-aware noising schedule.
 The reverse (denoising) process is parameterized by a U-Net over GAT layers.
 """
 
+import math
 from typing import Optional
 
 import numpy as np
@@ -136,7 +137,8 @@ class HeterogeneousGraphDiffusion(nn.Module):
             negative_slope=0.2,
             norm=norm,
         )
-        self.time_embedding = nn.Embedding(T, num_hidden)
+        self._num_hidden = num_hidden
+        self.time_embedding = None  # use sinusoidal
 
     # ------------------------------------------------------------------
     # Training
@@ -168,8 +170,16 @@ class HeterogeneousGraphDiffusion(nn.Module):
             extract(self.sqrt_alphas_bar, t, x.shape) * diffused
             + extract(self.sqrt_one_minus_alphas_bar, t, x.shape) * noise
         )
-        time_embed = self.time_embedding(t)
+        time_embed = self._sinusoidal_embed(t)
         return x_t, time_embed
+
+    def _sinusoidal_embed(self, t: torch.Tensor) -> torch.Tensor:
+        half = self._num_hidden // 2
+        freqs = torch.exp(
+            -math.log(10000) * torch.arange(half, device=t.device, dtype=torch.float32) / half
+        )
+        args = t.float().unsqueeze(1) * freqs.unsqueeze(0)
+        return torch.cat([torch.sin(args), torch.cos(args)], dim=-1)
 
     def _denoising_loss(self, x, x_t, time_embed, g) -> torch.Tensor:
         pred, _ = self.net(g, x_t=x_t, time_embed=time_embed)
