@@ -161,7 +161,7 @@ class HeterogeneousGraphDiffusion(nn.Module):
         """Sample x_t given the Laplacian-diffused sequence."""
         noise = torch.randn_like(x)
         noise = np.sqrt(2) * F.layer_norm(noise, (noise.shape[-1],))
-
+        noise = torch.sign(x) * torch.abs(noise)
         # Select the diffused feature at timestep t for each node
         diffused = torch.stack([diffused_x[t[i]][i] for i in range(len(t))], dim=0)
         x_t = (
