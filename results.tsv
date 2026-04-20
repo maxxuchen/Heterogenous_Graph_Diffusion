@@ -1,1 +1,2 @@
 commit	mean_f1	std_f1	status	description
+LR_decay_rev	0.878400	0.000000	discard	LR decay alpha=0.5 decay=50 - no improvement
