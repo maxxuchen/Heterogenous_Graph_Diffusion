@@ -32,6 +32,8 @@ DEVICE: cpu
 seeds:
     - 11
 eval_T:
+    - 10
     - 20
     - 30
     - 40
+    - 50
